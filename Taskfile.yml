@@ -1,0 +1,38 @@
+version: '2'
+
+vars:
+  CMD_DIR: ./cmd
+  BIN_DIR: ./bin
+
+tasks:
+  default:
+    cmds:
+      - task: build
+      - task: run
+
+  build:
+    vars:
+      MAIN_PACKAGE: mm-go-service
+      BIN_NAME: mm-go-service
+    cmds:
+      - go build -o {{.BIN_DIR}}/{{.BIN_NAME}} {{.CMD_DIR}}/{{.MAIN_PACKAGE}}
+    silent: true
+    sources:
+      - ./cmd/**/*.go
+      - ./internal/**/*.go
+  run:
+    vars:
+      MAIN_PACKAGE: mm-go-service
+      BIN_NAME: mm-go-service
+    cmds:
+      - ./{{.BIN_DIR}}/{{.BIN_NAME}}
+    silent: true
+    sources:
+      - ./cmd/**/*.go
+      - ./internal/**/*.go
+
+  dl-deps:
+    desc: Install tools required to build this app
+    cmds:
+      - task: go-get
+        vars: { REPO: some_github_repo }
